@@ -14,7 +14,7 @@ services:
     ports:
       - 2345:5432
     env_file:
-      - ./node/.env
+      - ./node/.env.development
     volumes:
       - volume_banco:/var/lib/postgresql/data
 

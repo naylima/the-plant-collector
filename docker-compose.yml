@@ -32,7 +32,7 @@ services:
     ports:
       - 2345:5432
     env_file:
-      - .node/.env.development
+      - ./node/.env.development
     volumes: 
       - postgres:/var/lib/postgresql/data
   
@@ -42,10 +42,10 @@ services:
     ports:
       - 80:80
     volumes:
-      - build_react:/var/www/html
+      - build_client:/var/www/html
     depends_on:
       - client
 
 volumes:
-  client:
+  build_client:
   postgres:

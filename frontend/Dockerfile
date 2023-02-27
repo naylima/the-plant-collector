@@ -1,14 +1,7 @@
 FROM node:16
-
-WORKDIR /app
-
-COPY . .
-RUN npm i
-RUN npm run build
-
-RUN mkdir -p /var/www/html
-RUN mv build/* /var/www/html
-
-WORKDIR /
-
-RUN rm -rf /app
+WORKDIR /client
+COPY ./package*.json /client/
+RUN npm install --force
+COPY . /client/
+EXPOSE 3000
+CMD ["npm", "run", "dev"]

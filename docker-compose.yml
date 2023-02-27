@@ -1,38 +1,41 @@
-version: "3"
-services:
-  app_react:
-    build: ./frontend
-    container_name: app_react
-    volumes:
-      - build_react:/var/www/html
-    depends_on:
-      - app_node
+version: "3.9"
 
-  banco:
+services:
+  client:
+    container_name: client
+    restart: always
+    build: ./frontend
+    ports:
+      - 3000:3000
+    depends_on: 
+      - app
+    volumes:
+      - build_client:/var/www/html
+
+  app:
+    container_name: app
+    restart: always
+    build: ./node
+    ports:
+      - 5000:4000
+    depends_on:
+      - plantshop_db 
+    env_file:
+      - .env.development
+    volumes: 
+      - .:/apps
+
+  plantshop_db:
     image: postgres
-    container_name: banco
+    container_name: plantshop_db
+    restart: always
     ports:
       - 2345:5432
     env_file:
-      - ./node/.env
-    volumes:
-      - volume_banco:/var/lib/postgresql/data
-
-  app_node:
-    build: ./node
-    container_name: app_node
-    ports:
-      - 5000:5000
-    env_file:
-      - ./node/.env
-    volumes:
-      - ./node:/usr/src
-      - /usr/src/node_modules
-    entrypoint: dockerize -wait tcp://banco:5432 -timeout 20s docker-entrypoint.sh
-    command: "npm run start"
-    depends_on:
-      - banco
-
+      - .env.development
+    volumes: 
+      - postgres:/var/lib/postgresql/data
+  
   nginx:
     build: ./nginx
     container_name: nginx
@@ -41,8 +44,8 @@ services:
     volumes:
       - build_react:/var/www/html
     depends_on:
-      - app_react
+      - client
 
 volumes:
-  build_react:
-  volume_banco:
+  client:
+  postgres:

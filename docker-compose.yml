@@ -3,27 +3,24 @@ version: "3.9"
 services:
   client:
     container_name: client
-    restart: always
     build: ./frontend
-    ports:
-      - 3000:3000
-    depends_on: 
-      - app
     volumes:
       - build_client:/var/www/html
+    depends_on:
+      - app
 
   app:
     container_name: app
-    restart: always
     build: ./node
     ports:
-      - 5000:4000
+      - 5000:5000
     depends_on:
       - plantshop_db 
     env_file:
       - ./node/.env.development
     volumes: 
-      - .:/apps
+      - ./node:/app
+      - node_modules:/app/node_modules
 
   plantshop_db:
     image: postgres
@@ -39,13 +36,16 @@ services:
   nginx:
     build: ./nginx
     container_name: nginx
+    restart: always
     ports:
       - 80:80
     volumes:
       - build_client:/var/www/html
     depends_on:
       - client
+      - app
 
 volumes:
+  node_modules:
   build_client:
   postgres:

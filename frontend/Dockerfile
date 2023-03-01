@@ -1,8 +1,15 @@
-FROM node:16
+FROM node:18
+
 WORKDIR /client
-COPY ./package*.json /client/
+
+COPY . .
+
 RUN npm install --force
+RUN npm run build
+
 RUN mkdir -p /var/www/html
-RUN mv build/* /var/www/html
-COPY . /client/
+RUN mv dist/* /var/www/html
+
+WORKDIR /
+
 RUN rm -rf /client

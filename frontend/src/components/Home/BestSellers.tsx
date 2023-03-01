@@ -56,6 +56,10 @@ export function BestSellers() {
       </Wrapper>
     );
   }
+
+  return (
+    <>Em breve...</>
+  );
 }
 
 const Wrapper = styled.div`
